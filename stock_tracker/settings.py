@@ -25,12 +25,20 @@ SECRET_KEY = 'django-insecure-^m9q$iz7x(lb7+87#@s4@@!b=wsctwu9-l#-*z3wd-veq8o+^&
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['localhost', '127.0.0.1']
 
 
 # Application definition
 
 INSTALLED_APPS = [
+    # third party apps
+    'rest_framework',
+    'drf_spectacular',
+    'django_celery_results',
+    'django_celery_beat',
+    'daphne',
+    'channels',
+    
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',
@@ -38,11 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    # third party apps
-    'rest_framework',
-    'drf_spectacular',
-    'django_celery_results',
-    'django_celery_beat',
+
 
     # local apps
     'mainapp',
@@ -147,3 +151,12 @@ CELERY_TIMEZONE = 'Asia/Kolkata'
 CELERY_RESULT_BACKEND = 'django-db' # This is used to store the results of the tasks
 
 CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers.DatabaseScheduler'
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("127.0.0.1", 6379)],
+        },
+    },
+}

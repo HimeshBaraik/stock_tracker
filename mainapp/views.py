@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.urls import reverse_lazy
+from django.http import HttpResponse
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,6 +9,8 @@ from .utilities import CommonService
 from .tasks import fetch_stocks_data_task
 from .serializers import StockDataRequestSerializer
 from mainapp.openAPI.output_schema import ExtendSchemaStructure
+from django.conf import settings
+from pathlib import Path
 
 
 # Create your views here.
@@ -41,3 +44,10 @@ class StocksView(APIView):
 
         data = CommonService().default_response(request, response_data, self.api_path)    
         return Response(data, status=status.HTTP_200_OK)
+
+
+def websocket_test_view(request):
+    """Simple view to serve the WebSocket test page"""
+    test_file = Path(settings.BASE_DIR) / 'websocket_test.html'
+    with open(test_file, 'r', encoding='utf-8') as f:
+        return HttpResponse(f.read(), content_type='text/html')

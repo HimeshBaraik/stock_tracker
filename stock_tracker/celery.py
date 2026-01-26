@@ -18,7 +18,7 @@ app.conf.beat_schedule = {
     'fetch-stock-data-every-ten-seconds': {
         'task': 'mainapp.tasks.fetch_stocks_data_task',
         'schedule': 10.0,
-        'args': (['RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS'],), # dynamic stock list, if no user is there dont call API
+        'args': (['RELIANCE.NS', 'TCS.NS', 'HDFCBANK.NS'],),
     },
 }
 
