@@ -5,8 +5,7 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from drf_spectacular.utils import extend_schema
-from .utilities import CommonService
-from .tasks import fetch_stocks_data_task
+from .utilities import CommonService, StockDataService
 from .serializers import StockDataRequestSerializer
 from mainapp.openAPI.output_schema import ExtendSchemaStructure
 from django.conf import settings
@@ -23,19 +22,13 @@ class StocksView(APIView):
     def post(self, request):
         serializer = self.serializer_class(data=request.data)
         if not serializer.is_valid():
-            # raise ExtendedValidationError(
-            #     serializer.errors, request_id=self.request.request_id
-            # )
-            # For now, use standard validation error response
             return Response(
                 {"error": serializer.errors},
                 status=status.HTTP_400_BAD_REQUEST
             )
 
         stocks_list = serializer.validated_data["stocks"]
-        
-        # Fetch stock data using Celery background task
-        stocks_data = fetch_stocks_data_task.delay(stocks_list=stocks_list).get()
+        stocks_data = StockDataService.fetch_stocks_data(stocks_list)
         
         response_data = {
             "count": len(stocks_data),
